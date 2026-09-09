@@ -47,11 +47,13 @@ def render_pdf(
     out_path: Optional[Union[str, Path]] = None,
     lang: str = "en",
     title: Optional[str] = None,
+    producer: Optional[str] = None,
 ) -> Path:
     """Render HTML report into an accessible, searchable PDF with document structure."""
     out_path = Path(out_path) if out_path else Path("accessibility-report.pdf")
     body_content = _extract_body_content(html_doc)
     doc_title = title or _extract_document_title(html_doc)
+    pdf_producer = producer or "engine-a11y accessible PDF engine"
 
     raw_print_css = theme_css("print")
     resolved_css = _resolve_css_variables(raw_print_css)
@@ -79,7 +81,7 @@ def render_pdf(
             pdf.Root.Lang = pikepdf.String(lang)
             with pdf.open_metadata(set_pikepdf_as_editor=False) as meta:
                 meta["dc:title"] = doc_title
-                meta["pdf:Producer"] = "engine-a11y accessible PDF engine"
+                meta["pdf:Producer"] = pdf_producer
 
             mark_info = pikepdf.Dictionary()
             mark_info[pikepdf.Name("/Marked")] = pikepdf.Boolean(True)

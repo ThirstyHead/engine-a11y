@@ -162,7 +162,7 @@ def render_md(
 
             note = WORD_ASSISTANT_NOTES.get(rule_id)
             if note:
-                lines.append(f"- **Author Guidance Note:** {note}")
+                lines.append(f"- **Word Accessibility Assistant Note:** {note}")
 
             if f.why_unfixable:
                 lines.append(f"- **Why Software Cannot Automatically Fix This:** {f.why_unfixable}")
