@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "engine-a11y"
+version = "0.1.0"
+description = "Core accessibility engine, data models, contrast algorithms, reporting, triage, and GUI shared across format-specific accessibility tools"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "a11y contributors" }]
+keywords = ["accessibility", "wcag", "a11y", "contrast", "reporting", "triage"]
+dependencies = [
+    "wcag-contrast-ratio>=0.9,<1",
+    "markdown>=3.6,<4",
+    "pymupdf>=1.24",
+    "pikepdf>=9.0",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+gui = [
+    "PySide6>=6.5",
+]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "pytest-qt>=4.4.0",
+]
+all = [
+    "engine-a11y[dev,gui]",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+engine_a11y = [
+    "sc_cache.json",
+    "reports/themes/**/*.css",
+    "reports/themes/**/*.json",
+    "reports/themes/**/*.md",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
