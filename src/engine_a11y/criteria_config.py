@@ -4,7 +4,7 @@ Supports Markdown checklist [x] / [ ] format as primary, as well as YAML.
 """
 import re
 from pathlib import Path
-from typing import Dict, List, Optional, Set, Tuple, Union
+from typing import Any, Dict, List, Optional, Set, Tuple, Union
 import yaml
 from .findings import Finding
 from .profile import WCAG_CATALOG
@@ -81,11 +81,15 @@ def load_criteria_config(path: Union[str, Path]) -> Tuple[Set[str], Set[str]]:
     return included, excluded
 
 
-def apply_criteria_config(findings: List[Finding], excluded_sc: Set[str]) -> None:
+def apply_criteria_config(findings: List[Any], excluded_sc: Set[str]) -> None:
     """Mark findings as excluded if their Success Criterion is in excluded_sc."""
     for f in findings:
-        if f.sc in excluded_sc:
-            f.excluded = True
+        sc = getattr(f, "sc", None) or (f.get("sc") if isinstance(f, dict) else None)
+        if sc in excluded_sc:
+            if isinstance(f, dict):
+                f["excluded"] = True
+            else:
+                f.excluded = True
 
 
 def generate_criteria_template(out_path: Union[str, Path], format_type: str = "checklist") -> Path:

@@ -57,14 +57,16 @@ def summarize(findings: List[Finding]) -> Dict[str, Any]:
     excluded_count = 0
 
     for f in findings:
-        if f.excluded:
+        is_excluded = getattr(f, "excluded", False) or (f.get("excluded", False) if isinstance(f, dict) else False)
+        sev = getattr(f, "severity", None) or (f.get("severity") if isinstance(f, dict) else "")
+        if is_excluded:
             excluded_count += 1
-            if f.severity in excluded_by_sev:
-                excluded_by_sev[f.severity] += 1
+            if sev in excluded_by_sev:
+                excluded_by_sev[sev] += 1
         else:
             active_count += 1
-            if f.severity in active_by_sev:
-                active_by_sev[f.severity] += 1
+            if sev in active_by_sev:
+                active_by_sev[sev] += 1
 
     active_blocking = active_by_sev["critical"] + active_by_sev["serious"]
     excluded_blocking = excluded_by_sev["critical"] + excluded_by_sev["serious"]
