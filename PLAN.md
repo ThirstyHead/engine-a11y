@@ -2,7 +2,7 @@
 
 > **For Hermes:** Use `subagent-driven-development` skill to implement this plan task-by-task.
 
-**Goal:** Extract and consolidate the shared accessibility infrastructure (findings data structures with "what-if" excluded buckets, contrast algorithms, source immutability, full WCAG 2.1/2.2 criteria catalog, user-editable criteria configuration files, document-specific conformance profiles, multi-format reporting with full SC coverage matrices, triage state machine, and desktop GUI) from `pdf-a11y`, `docx-a11y`, `pptx-a11y`, and `xslx-a11y` into a standalone, modular core library `/Users/scott/code/local/engine-a11y`.
+**Goal:** Extract and consolidate the shared accessibility infrastructure (findings data structures with "what-if" excluded buckets, contrast algorithms, source immutability, full WCAG 2.1/2.2 criteria catalog, user-editable criteria configuration files, document-specific conformance profiles, multi-format reporting with full SC coverage matrices, triage state machine, and desktop GUI) from `pdf-a11y`, `docx-a11y`, `pptx-a11y`, and `xlsx-a11y` into a standalone, modular core library `/Users/scott/code/local/engine-a11y`.
 
 **Architecture:** `engine-a11y` (`engine_a11y`) serves as the headless foundation providing format-agnostic data structures, contrast math, report renderers, triage workflows, and GUI widgets. Crucially, it provides:
 1. A comprehensive WCAG SC Catalog (all Level A & AA criteria).
@@ -20,7 +20,7 @@
    - `/Users/scott/code/local/pdf-a11y`: Audits and remediates PDF documents via `pikepdf`, `pymupdf`, and `pdfplumber`.
    - `/Users/scott/code/local/docx-a11y`: Audits and remediates Word `.docx` documents via `python-docx-ng`.
    - `/Users/scott/code/local/pptx-a11y`: Audits and remediates PowerPoint `.pptx` presentations via `python-pptx`.
-   - `/Users/scott/code/local/xslx-a11y`: Audits and remediates Excel `.xlsx` workbooks via `openpyxl`.
+   - `/Users/scott/code/local/xlsx-a11y`: Audits and remediates Excel `.xlsx` workbooks via `openpyxl`.
 
 2. **User Story: Text-Based Criteria Filter & "What-If" Analysis:**
    - *Problem:* An organization may be actively redesigning brand colors, awaiting copy team image descriptions, or testing alternative templates. They need to know: *"If we assume contrast is about to be solved by our upcoming brand update, what other accessibility barriers exist in this document right now?"*
@@ -797,7 +797,7 @@ In `run_cli_pipeline`:
 
 ### Phase 10: Downstream Integration & Parity Verification
 
-#### Tasks 10.1 - 10.4: Connect `docx-a11y`, `pptx-a11y`, `xslx-a11y`, `pdf-a11y`
+#### Tasks 10.1 - 10.4: Connect `docx-a11y`, `pptx-a11y`, `xlsx-a11y`, `pdf-a11y`
 Each tool:
 1. Depends on `engine-a11y`.
 2. Uses its format profile (`get_docx_profile()`, etc.).
