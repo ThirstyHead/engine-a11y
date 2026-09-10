@@ -34,5 +34,7 @@ jobs:
           pip install -e ".[all]"
 
       - name: Run test suite with coverage
+        env:
+          QT_QPA_PLATFORM: offscreen
         run: |
           pytest --cov=engine_a11y --cov-report=term-missing
