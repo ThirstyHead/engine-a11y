@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "engine-a11y"
-version = "0.1.0"
+version = "0.2.0"
 description = "Core accessibility engine, data models, contrast algorithms, reporting, triage, and GUI shared across format-specific accessibility tools"
 readme = "README.md"
 requires-python = ">=3.10"
