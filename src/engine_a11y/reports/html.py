@@ -23,6 +23,27 @@ def _wrap_findings(body: str) -> str:
     return pattern.sub(r'<section class="finding">\n\1\n</section>\n', body)
 
 
+def _format_badges_and_tasks(body: str) -> str:
+    body = body.replace(
+        "[RESOLVED BY AUTO-REMEDIATION]",
+        '<span class="badge badge-resolved" role="status">RESOLVED BY AUTO-REMEDIATION</span>',
+    )
+    body = body.replace(
+        "[ACTION REQUIRED - HUMAN IN THE LOOP]",
+        '<span class="badge badge-action" role="status">ACTION REQUIRED - HUMAN IN THE LOOP</span>',
+    )
+    body = body.replace(
+        "[EXCLUDED FROM VERDICT]",
+        '<span class="badge badge-excluded" role="status">EXCLUDED FROM VERDICT</span>',
+    )
+    body = re.sub(
+        r"<li>\[ \]\s*",
+        '<li class="task-item"><input type="checkbox" disabled aria-hidden="true"> ',
+        body,
+    )
+    return body
+
+
 def _build_toc_nav(body: str) -> str:
     items = [f'    <li><a href="#{hid}">{text}</a></li>' for hid, text in _H2_RE.findall(body)]
     if not items:
@@ -47,11 +68,13 @@ def render_html(
     theme: str = "light",
     lang: str = "en",
     config_dir: Optional[str] = None,
+    profile_name: str = "docx-a11y",
 ) -> str:
     """Render canonical Markdown into an accessible, self-contained HTML5 document."""
     raw_body = markdown.markdown(md_text, extensions=_MD_EXTENSIONS)
     body = _wrap_summary_banner(raw_body)
     body = _wrap_findings(body)
+    body = _format_badges_and_tasks(body)
     toc = _build_toc_nav(body)
     title = _html.escape(_extract_title(md_text))
     css = theme_css(theme, config_dir=config_dir)

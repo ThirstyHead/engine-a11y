@@ -123,6 +123,48 @@ BANNED_PHRASES = [
     "stupid mistake",
 ]
 
+# Educational explanations for why automated software cannot guess author intent
+# and why human author review is necessary.
+HUMAN_IN_THE_LOOP_EXPLANATIONS = {
+    "image-alt-missing": (
+        "Alternative text must convey the specific purpose and meaning of an image in the context of the surrounding "
+        "document. Automated tools cannot divine author intent or the pedagogy of a diagram without risking inaccurate, "
+        "hallucinatory descriptions. The author must provide an accurate text alternative or mark decorative imagery."
+    ),
+    "color-contrast": (
+        "Modifying color values automatically risks violating brand guidelines, corporate identity standards, or charts "
+        "with intentional color coding. Authors and designers must select accessible color palettes that meet the 4.5:1 ratio."
+    ),
+    "link-text-vague": (
+        "Hyperlinks reading 'click here' or 'read more' must be rewritten to describe their exact destination. "
+        "Only the author knows the editorial context and intended destination of external resources."
+    ),
+    "heading-level-skipped": (
+        "Fixing skipped headings requires understanding the document's logical outline and hierarchy. An author must "
+        "decide whether a heading represents a subsection (H2) or a sub-subsection (H3)."
+    ),
+    "table-header-missing": (
+        "While automated software can designate the first row as a header, complex tables with multi-tier headers, "
+        "row headers, or split categories require author verification to ensure screen readers read cells in correct logical order."
+    ),
+}
+
+
+def get_encouraging_progress_banner(resolved: int, remaining: int, total: int) -> str:
+    """Generate an encouraging, constructive summary message celebrating progress."""
+    if total == 0:
+        return "🌟 **Outstanding!** No accessibility barriers were detected in this document. It meets all tested WCAG criteria."
+
+    if remaining == 0:
+        return f"🎉 **Fantastic achievement!** All {resolved} detected accessibility barriers were successfully resolved. The document now passes active WCAG requirements."
+
+    pct = round((resolved / total) * 100.0, 1) if total > 0 else 0.0
+    return (
+        f"🚀 **Great progress!** You have resolved **{resolved} of {total} barriers ({pct}% improvement)**. "
+        f"Only **{remaining} action{'s' if remaining != 1 else ''}** remain{'s' if remaining == 1 else ''} "
+        f"for author review to achieve full WCAG Level AA compliance."
+    )
+
 
 def assert_social_model_language(text: str) -> None:
     """Validate that text does not contain prohibited medical model or condescending terminology."""
