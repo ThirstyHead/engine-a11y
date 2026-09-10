@@ -1,5 +1,6 @@
 """Remediation progress statistics (progress over perfection)."""
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional, Tuple, Union
+from ..findings import Finding
 
 
 def compute_progress_stats(
@@ -30,4 +31,52 @@ def compute_progress_stats(
         "resolved_blocking": resolved_blocking,
         "improvement_rate_pct": improvement_rate,
         "compliance_verdict": "PASS" if a_blocking == 0 else "PARTIAL REMEDIATION (MANUAL REVIEW NEEDED)",
+    }
+
+
+def _finding_key(f: Any) -> Tuple[str, str]:
+    if isinstance(f, dict):
+        return (str(f.get("rule_id", "")), str(f.get("location", "")))
+    return (getattr(f, "rule_id", ""), getattr(f, "location", ""))
+
+
+def _is_fixable(f: Any) -> bool:
+    if isinstance(f, dict):
+        return bool(f.get("fixable", False))
+    return bool(getattr(f, "fixable", False))
+
+
+def diff_findings(
+    before_findings: List[Any],
+    after_findings: Optional[List[Any]] = None,
+) -> Dict[str, Any]:
+    """Compute finding-level diff between original and remediated states.
+
+    Works with both Finding instances and dictionary representations.
+    """
+    if after_findings is None:
+        auto_fixable = [f for f in before_findings if _is_fixable(f)]
+        manual_only = [f for f in before_findings if not _is_fixable(f)]
+        return {
+            "mode": "audit_only",
+            "resolved": [],
+            "resolved_count": 0,
+            "remaining": list(before_findings),
+            "remaining_count": len(before_findings),
+            "auto_fixable": auto_fixable,
+            "manual_only": manual_only,
+        }
+
+    after_keys = {_finding_key(f) for f in after_findings}
+    resolved = [f for f in before_findings if _finding_key(f) not in after_keys]
+    remaining = list(after_findings)
+
+    return {
+        "mode": "remediated",
+        "resolved": resolved,
+        "resolved_count": len(resolved),
+        "remaining": remaining,
+        "remaining_count": len(remaining),
+        "auto_fixable": [],
+        "manual_only": [f for f in remaining if not _is_fixable(f)],
     }
