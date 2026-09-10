@@ -36,6 +36,21 @@ def test_render_html():
     assert 'class="toc"' in html_out
     assert "WCAG Conformance &amp; Coverage Matrix" in html_out
 
+
+def test_render_html_scorecard_and_badges():
+    md = (
+        "# Accessibility Audit Report: doc.docx\n\n"
+        "### Document Remediation Scorecard\n\n"
+        "| Metric | Count |\n|---|---|\n| Original Barriers | 2 |\n\n"
+        "### 1. [CRITICAL] [RESOLVED BY AUTO-REMEDIATION] Title fixed\n\n"
+        "## Action Checklist: Human-in-the-Loop Next Steps\n\n"
+        "- [ ] Task: Edit Alt Text\n"
+    )
+    html = render_html(md)
+    assert "<table" in html
+    assert "badge-resolved" in html
+    assert "task-item" in html or 'type="checkbox"' in html
+
 def test_render_pdf(tmp_path):
     html_doc = render_html(SAMPLE_MD, theme="light")
     pdf_out = tmp_path / "test_report.pdf"
