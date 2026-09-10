@@ -29,8 +29,10 @@ def test_generate_app_icons_creates_png_and_ico(tmp_path):
     )
     assert "png" in generated
     assert "ico" in generated
+    assert "icns" in generated
     assert generated["png"].exists()
     assert generated["ico"].exists()
+    assert generated["icns"].exists()
 
     with Image.open(generated["png"]) as img:
         assert img.size == (256, 256)
