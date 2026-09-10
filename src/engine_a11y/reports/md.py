@@ -112,6 +112,18 @@ def render_md(
     
     pct_str = f"{stats.get('improvement_rate_pct', 0.0)}%" if stats.get("mode") == "remediated" else "N/A (Audit Only)"
     lines.append(f"| **Remediation Improvement** | **{pct_str}** | Progress toward full accessibility |")
+
+    if stats.get("mode") == "remediated":
+        pct = stats.get("improvement_rate_pct", 0.0)
+        resolved_blocking = stats.get("resolved_blocking", 0)
+        before_blocking = stats.get("before_blocking", 0)
+        resolved_total = stats.get("resolved_total", 0)
+        lines.append("")
+        lines.append(
+            f"- **Remediation Progress:** Resolved **{resolved_blocking}** of **{before_blocking}** "
+            f"blocking accessibility barriers ({pct:.1f}% improvement across {resolved_total} total resolved findings)."
+        )
+
     lines.append("")
 
     # Fixes Incorporated Section
