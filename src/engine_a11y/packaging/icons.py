@@ -156,5 +156,8 @@ def generate_app_icons(
         shutil.rmtree(iconset_dir, ignore_errors=True)
         if icns_path.exists():
             generated["icns"] = icns_path
+    else:
+        master.save(icns_path, format="ICNS")
+        generated["icns"] = icns_path
 
     return generated
