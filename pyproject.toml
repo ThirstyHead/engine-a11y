@@ -14,8 +14,6 @@ keywords = ["accessibility", "wcag", "a11y", "contrast", "reporting", "triage"]
 dependencies = [
     "wcag-contrast-ratio>=0.9,<1",
     "markdown>=3.6,<4",
-    "pymupdf>=1.24",
-    "pikepdf>=9.0",
     "pyyaml>=6.0",
 ]
 
@@ -23,6 +21,10 @@ dependencies = [
 engine-a11y = "engine_a11y.cli:main"
 
 [project.optional-dependencies]
+pdf = [
+    "pymupdf>=1.24",
+    "pikepdf>=9.0",
+]
 gui = [
     "PySide6>=6.5",
 ]
@@ -33,9 +35,11 @@ dev = [
     "pytest>=7.0",
     "pytest-cov>=4.0",
     "pytest-qt>=4.4.0",
+    "pymupdf>=1.24",
+    "pikepdf>=9.0",
 ]
 all = [
-    "engine-a11y[dev,gui,packaging]",
+    "engine-a11y[dev,gui,packaging,pdf]",
 ]
 
 [tool.setuptools.packages.find]
