@@ -15,6 +15,16 @@ def test_encouraging_progress_banner_tone():
     assert_social_model_language(banner)
 
 
+def test_encouraging_progress_banner_zero_resolved():
+    banner = get_encouraging_progress_banner(resolved=0, remaining=2, total=2)
+    # Should not patronize with "Great progress!" or celebrate 0.0% improvement
+    assert "great progress" not in banner.lower()
+    assert "0.0% improvement" not in banner.lower()
+    assert "action required" in banner.lower()
+    assert "2 accessibility barriers" in banner.lower()
+    assert_social_model_language(banner)
+
+
 def test_encouraging_progress_banner_all_clean():
     banner = get_encouraging_progress_banner(resolved=0, remaining=0, total=0)
     assert "meets all" in banner.lower() or "outstanding" in banner.lower()

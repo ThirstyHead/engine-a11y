@@ -158,6 +158,13 @@ def get_encouraging_progress_banner(resolved: int, remaining: int, total: int) -
     if remaining == 0:
         return f"🎉 **Fantastic achievement!** All {resolved} detected accessibility barriers were successfully resolved. The document now passes active WCAG requirements."
 
+    if resolved == 0:
+        return (
+            f"📋 **Action required.** Detected **{total} accessibility barrier{'s' if total != 1 else ''}** "
+            f"requiring author review to achieve full WCAG Level AA compliance. Automated tools cannot resolve "
+            f"these items without author editorial decisions."
+        )
+
     pct = round((resolved / total) * 100.0, 1) if total > 0 else 0.0
     return (
         f"🚀 **Great progress!** You have resolved **{resolved} of {total} barriers ({pct}% improvement)**. "
