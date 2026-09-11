@@ -5,8 +5,12 @@ import re
 import tempfile
 from pathlib import Path
 from typing import Optional, Union
-import pikepdf
-import pymupdf as fitz
+try:
+    import pikepdf
+    import pymupdf as fitz
+except ImportError:
+    pikepdf = None
+    fitz = None
 from .theme import theme_css
 
 _MARGIN = 54.0  # 0.75 inch print margins
@@ -49,6 +53,12 @@ def render_pdf(
     title: Optional[str] = None,
     producer: Optional[str] = None,
 ) -> Path:
+    if pikepdf is None or fitz is None:
+        raise ImportError(
+            "PDF report generation requires 'pymupdf' and 'pikepdf'. "
+            "Please install with: pip install pymupdf pikepdf"
+        )
+    assert fitz is not None and pikepdf is not None
     """Render HTML report into an accessible, searchable PDF with document structure."""
     out_path = Path(out_path) if out_path else Path("accessibility-report.pdf")
     body_content = _extract_body_content(html_doc)
